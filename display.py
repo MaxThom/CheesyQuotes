@@ -17,7 +17,7 @@ class DisplayManager:
         lines.append("")
         words = quote.split(" ")
         for word in words:
-            if (count + len(word) <= 25):
+            if (count + len(word) <= 23):
                 count = count + len(word)
                 lines[lines_count] = lines[lines_count] + word + " "
             else:
@@ -25,7 +25,7 @@ class DisplayManager:
                 lines_count += 1
                 lines.append(word + " ")
 
-        font24 = ImageFont.truetype('/home/pi/CheesyQuotes/fonts/Peddana-Regular.ttf', 24)        
+        font24 = ImageFont.truetype('/home/pi/CheesyQuotes/fonts/Peddana-Regular.ttf', 23)        
         image = Image.new('1', (self.epd.height, self.epd.width), 255)  # 255: clear the frame   
         draw = ImageDraw.Draw(image)
 
