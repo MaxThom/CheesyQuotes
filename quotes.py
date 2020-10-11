@@ -1,9 +1,12 @@
 import constants
 import requests
 import json
+import os
+import random
 
 class QuotesManager:
     def __init__(self):
+        self._script_dir = os.path.dirname(os.path.realpath('__file__'))
         self.quoteTypeAction = {
             constants.OFFLINE: self.__getOfflineQuote,
             constants.INSPIRATIONAL: self.__getInspirationalQuote,         
@@ -14,7 +17,8 @@ class QuotesManager:
         quote=""
         try:
             quote = self.quoteTypeAction[type]()
-            #quote = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            if (type != constants.OFFLINE):
+                self.__log_quote(quote)
         except requests.ConnectionError as ex:
             print("Device is not connected, using offline quote")
             quote = self.quoteTypeAction[constants.OFFLINE]()
@@ -22,7 +26,6 @@ class QuotesManager:
             print("Unknown error, using offline quote")
             quote = self.quoteTypeAction[constants.OFFLINE]()
         return quote
-
 
     def __getInspirationalQuote(self):        
         r = requests.get(constants.URL_INSPIRATIONAL) 
@@ -34,7 +37,15 @@ class QuotesManager:
         quote_details = json.loads(r.text)           
         return quote_details[0]["content"]["rendered"].replace("<p>", "").replace("</p>", "")
 
-    def __getOfflineQuote(self):
-        return "Bless are the curious for they shall have adventures."
+    def __getOfflineQuote(self):        
+        return random.choice(list(open(self._script_dir + "/files/offline_quotes.txt"))).strip('\n')
+
+    def __log_quote(self, quote):
+        f = open(self._script_dir + "/files/offline_quotes.txt", "a")
+        f.write("%s\n" % (quote))
+        f.close()
+
+
+    
 
 

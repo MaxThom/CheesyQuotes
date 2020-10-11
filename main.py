@@ -1,4 +1,4 @@
-import time, threading, os
+import time, threading, os, datetime
 import constants
 from quotes import QuotesManager
 from display import DisplayManager
@@ -10,19 +10,18 @@ from display import DisplayManager
 
 class Main:
     def __init__(self):
+        self._script_dir = os.path.dirname(os.path.realpath('__file__'))
         self._quotesManager = QuotesManager()
         self._displayManager = DisplayManager()
 
     def main(self):
-        script_dir = os.path.dirname(__file__)
-        print(script_dir)
         try:
             while (True):
                 quote = self.retrieve_quote()
                 self.display_quote(quote)
                 time.sleep(constants.REFRESH_TIME_SEC)
         except Exception as e: 
-            log_message("Error: " + e)
+            self.log_message(e)
     
     def retrieve_quote(self):
         quote = self._quotesManager.GetRandomQuote(constants.INSPIRATIONAL)
@@ -32,13 +31,11 @@ class Main:
     def display_quote(self, quote):
         self._displayManager.printQuote(quote)
 
-    def log_message(msg):
+    def log_message(self, msg):
         print(msg)
-        f = open("/home/pi/Desktop/LightYourHearth-rpi/Logs/LightYourHeath_Logs.txt", "a")
-        f.write("[%s] -> %s.\n" % (datetime.datetime.now(), msg))
-        f.close()
-
-    
+        f = open(self._script_dir + "/files/logs.txt", "a")
+        f.write("[%s] %s.\n" % (datetime.datetime.now(), msg))
+        f.close()    
 
 main = Main()
 main.main()
