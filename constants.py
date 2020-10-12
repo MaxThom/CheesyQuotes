@@ -5,4 +5,4 @@ DESIGN=2
 URL_INSPIRATIONAL="https://zenquotes.io/api/random"
 URL_DESIGN="https://quotesondesign.com/wp-json/wp/v2/posts/?orderby=rand"
 
-REFRESH_TIME_SEC=10
+REFRESH_TIME_SEC=60
